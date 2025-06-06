@@ -48,11 +48,41 @@ class Solution {
         return result;
     }
 
+    public int[] topKFrequent_bucketsort(int[] nums, int k) {
+        Map<Integer, Integer> counts = new HashMap<>();
+
+        for (int num : nums) {
+            counts.put(num, counts.getOrDefault(num, 0) + 1);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Integer>[] buckets = new List[nums.length + 1];
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = new ArrayList<>();
+        }
+
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            buckets[entry.getValue()].add(entry.getKey());
+        }
+
+        int[] result = new int[k];
+        int index = 0;
+        for (int i = buckets.length - 1; i > 0 && index < k; i--) {
+            for (int num : buckets[i]) {
+                result[index++] = num;
+                if (index == k)
+                    return result;
+            }
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
         int[] nums = { 1, 1, 1, 2, 2, 3 };
         int k = 2;
-        int[] result = solution.topKFrequent_minheap(nums, k);
+        int[] result = solution.topKFrequent_bucketsort(nums, k);
         System.out.println(Arrays.toString(result));
     }
 }
